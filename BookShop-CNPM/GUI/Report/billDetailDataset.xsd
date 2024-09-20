@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="billDetailDataset" targetNamespace="http://tempuri.org/billDetailDataset.xsd" xmlns:mstns="http://tempuri.org/billDetailDataset.xsd" xmlns="http://tempuri.org/billDetailDataset.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections />
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="billDetailDataset" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true" msprop:Generator_UserDSName="billDetailDataset" msprop:Generator_DataSetName="billDetailDataset">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="BillDetail" msprop:Generator_RowEvHandlerName="BillDetailRowChangeEventHandler" msprop:Generator_RowDeletedName="BillDetailRowDeleted" msprop:Generator_RowDeletingName="BillDetailRowDeleting" msprop:Generator_RowEvArgName="BillDetailRowChangeEvent" msprop:Generator_TablePropName="BillDetail" msprop:Generator_RowChangedName="BillDetailRowChanged" msprop:Generator_RowChangingName="BillDetailRowChanging" msprop:Generator_TableClassName="BillDetailDataTable" msprop:Generator_RowClassName="BillDetailRow" msprop:Generator_TableVarName="tableBillDetail" msprop:Generator_UserTableName="BillDetail">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="STT" msprop:Generator_ColumnPropNameInRow="STT" msprop:Generator_ColumnPropNameInTable="STTColumn" msprop:Generator_ColumnVarNameInTable="columnSTT" msprop:Generator_UserColumnName="STT" type="xs:string" minOccurs="0" />
+              <xs:element name="maSachCanDoi" msprop:Generator_ColumnPropNameInRow="maSachCanDoi" msprop:Generator_ColumnPropNameInTable="maSachCanDoiColumn" msprop:Generator_ColumnVarNameInTable="columnmaSachCanDoi" msprop:Generator_UserColumnName="maSachCanDoi" type="xs:string" minOccurs="0" />
+              <xs:element name="maSachMuonDoi" msprop:Generator_ColumnPropNameInRow="maSachMuonDoi" msprop:Generator_ColumnPropNameInTable="maSachMuonDoiColumn" msprop:Generator_ColumnVarNameInTable="columnmaSachMuonDoi" msprop:Generator_UserColumnName="maSachMuonDoi" type="xs:string" minOccurs="0" />
+              <xs:element name="soLuong" msprop:Generator_ColumnPropNameInRow="soLuong" msprop:Generator_ColumnPropNameInTable="soLuongColumn" msprop:Generator_ColumnVarNameInTable="columnsoLuong" msprop:Generator_UserColumnName="soLuong" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

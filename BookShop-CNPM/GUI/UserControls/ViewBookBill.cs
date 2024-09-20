@@ -1,0 +1,39 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using BookShop_CNPM.DTO;
+using static Guna.UI2.Native.WinApi;
+
+namespace BookShop_CNPM.GUI.UserControls
+{
+    public partial class ViewBookBill : UserControl
+    {
+        public ViewBookBill(string name, int amount, decimal price, byte[] image)
+        {
+            InitializeComponent();
+            NameLb.Text = name;
+            StockLb.Text = "SL: " + amount;
+            if(price != 0)
+            {
+				PriceLb.Text = string.Format("{0:N0} VND", price);
+            }
+            else
+            {
+                PriceLb.Visible = false;    
+            }
+
+			MemoryStream ms = new MemoryStream(image);
+            Image img = Image.FromStream(ms);
+
+            this.BookImage.Image = img;
+
+        }
+    }
+}

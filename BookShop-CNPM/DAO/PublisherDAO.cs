@@ -1,0 +1,158 @@
+﻿using System;
+using System.Data;
+using System.Windows.Documents;
+using MySql.Data.MySqlClient;
+using BookShop_CNPM.DTO;
+
+namespace BookShop_CNPM.DAO
+{
+    public class PublisherDAO : IDAO<PublisherDTO>
+    {
+        private static PublisherDAO instance;
+
+        public static PublisherDAO Instance
+        {
+            get
+            {
+                if (instance == null)
+                {
+                    instance = new PublisherDAO();
+                }
+
+                return PublisherDAO.instance;
+            }
+            private set { PublisherDAO.instance = value; }
+        }
+
+        
+        public DataTable getAll() {
+            return DataProvider.Instance.ExecuteQuery("select * from nhaxuatban where hienThi=1;");
+        }
+        public bool checkDuplicateName(string value)
+        {
+            DataTable dataTable = DataProvider.Instance.ExecuteQuery("select * from nhaxuatban WHERE LOWER(tenNhaXuatBan)=LOWER(@tenNhaXuatBan) and hienThi=1;",
+                new MySqlParameter[] {
+                    new MySqlParameter("@tenNhaXuatBan", value.Trim().ToLower())
+                }
+            );
+
+            if (dataTable.Rows.Count <= 0) return false;
+
+            return true;
+        }
+
+        public bool checkDuplicateName(string value, int id)
+        {
+            DataTable dataTable = DataProvider.Instance.ExecuteQuery("select * from nhaxuatban WHERE LOWER(tenNhaXuatBan)=LOWER(@tenNhaXuatBan) and maNhaXuatBan!=@id and hienThi=1;",
+                new MySqlParameter[] {
+                    new MySqlParameter("@tenNhaXuatBan", value.Trim().ToLower()),
+                    new MySqlParameter("@id", id)
+                }
+            );
+
+            if (dataTable.Rows.Count <= 0) return false;
+
+            return true;
+        }
+
+        public PublisherDTO getById(string id)
+        {
+            DataTable dataTable = DataProvider.Instance.ExecuteQuery(
+                "SELECT * FROM nhaxuatban WHERE maNhaXuatBan=@maNhaXuatBan;",
+                new MySqlParameter[] {
+                    new MySqlParameter("@maNhaXuatBan", id)
+                }
+            );
+
+            if (dataTable.Rows.Count <= 0) return null;
+
+            PublisherDTO account = new PublisherDTO(dataTable.Rows[0]);
+
+            return account;
+        }
+        
+        public DataTable searchData(string value)
+        {
+            string sql = $@"SELECT * FROM nhaxuatban WHERE (maNhaXuatBan LIKE @maNhaXuatBan OR tenNhaXuatBan LIKE @tenNhaXuatBan) and hienThi=1;";
+
+            return DataProvider.Instance.ExecuteQuery(sql,
+                new MySqlParameter[] {
+                    new MySqlParameter("@maNhaXuatBan", "%" + value + "%"),
+                    new MySqlParameter("@tenNhaXuatBan", "%" + value + "%")
+                }
+            );
+        }
+
+        public bool insert(PublisherDTO data)
+        {
+
+            string sql = $@"INSERT INTO nhaxuatban (tenNhaXuatBan, diaChi, soDienThoai)
+                            VALUES (@tenNhaXuatBan, @diaChi, @soDienThoai);";
+
+            int rowChanged = DataProvider.Instance.ExecuteNonQuery(sql,
+                new MySqlParameter[] {
+                    new MySqlParameter("@tenNhaXuatBan", data.TenNhaXuatBan),
+                    new MySqlParameter("@diaChi", data.DiaChi),
+                    new MySqlParameter("@soDienThoai", data.SoDienThoai),
+                });
+
+            return rowChanged > 0;
+        }
+
+        public bool update(PublisherDTO data)
+        {
+            string sql = $@"UPDATE nhaxuatban
+                            SET tenNhaXuatBan=@tenNhaXuatBan, diaChi=@diaChi, soDienThoai=@soDienThoai
+                            WHERE maNhaXuatBan=@maNhaXuatBan;";
+
+            int rowChanged = DataProvider.Instance.ExecuteNonQuery(sql,
+                new MySqlParameter[] {
+                    new MySqlParameter("@maNhaXuatBan", data.MaNhaXuatBan),
+                    new MySqlParameter("@tenNhaXuatBan", data.TenNhaXuatBan),
+                    new MySqlParameter("@diaChi", data.DiaChi),
+                    new MySqlParameter("@soDienThoai", data.SoDienThoai),
+                });
+
+            return rowChanged > 0;
+        }
+
+        public bool delete(string id)
+        {
+            string sql = $@"UPDATE nhaxuatban SET hienThi = 0 WHERE maNhaXuatBan=@maNhaXuatBan;";
+
+            int rowChanged = DataProvider.Instance.ExecuteNonQuery(sql,
+                new MySqlParameter[] {
+                    new MySqlParameter("@maNhaXuatBan", id),
+                });
+
+            return rowChanged > 0;
+        }
+
+		public bool checkDuplicatePhoneNumber(string value)
+		{
+			DataTable dataTable = DataProvider.Instance.ExecuteQuery("select * from nhaxuatban WHERE soDienThoai = @SoDienThoai and hienThi=1;",
+			 new MySqlParameter[] {
+				new MySqlParameter("@SoDienThoai", value)
+			 }
+		 );
+
+			if (dataTable.Rows.Count <= 0) return false;
+
+			return true;
+		}
+
+		public bool checkDuplicatePhoneNumber(string value, int id)
+		{
+			DataTable dataTable = DataProvider.Instance.ExecuteQuery("select * from nhaxuatban WHERE soDienThoai = @SoDienThoai and maNhaXuatBan!=@id and hienThi=1;",
+				new MySqlParameter[] {
+					new MySqlParameter("@SoDienThoai", value.Trim().ToLower()),
+					new MySqlParameter("@id", id)
+				}
+			);
+
+			if (dataTable.Rows.Count <= 0) return false;
+
+			return true;
+		}
+	}
+}
