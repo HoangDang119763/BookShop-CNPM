@@ -127,6 +127,7 @@
             this.flowLayoutPanel4.Name = "flowLayoutPanel4";
             this.flowLayoutPanel4.Size = new System.Drawing.Size(982, 60);
             this.flowLayoutPanel4.TabIndex = 0;
+            this.flowLayoutPanel4.Paint += new System.Windows.Forms.PaintEventHandler(this.flowLayoutPanel4_Paint);
             // 
             // flowLayoutPanel5
             // 
@@ -320,6 +321,7 @@
             this.ProfitPercentTxb.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
             this.ProfitPercentTxb.DisabledState.Parent = this.ProfitPercentTxb;
             this.ProfitPercentTxb.DisabledState.PlaceholderForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
+            this.ProfitPercentTxb.Enabled = false;
             this.ProfitPercentTxb.FocusedState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
             this.ProfitPercentTxb.FocusedState.Parent = this.ProfitPercentTxb;
             this.ProfitPercentTxb.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
@@ -331,7 +333,7 @@
             this.ProfitPercentTxb.Name = "ProfitPercentTxb";
             this.ProfitPercentTxb.PasswordChar = '\0';
             this.ProfitPercentTxb.PlaceholderForeColor = System.Drawing.Color.DarkGray;
-            this.ProfitPercentTxb.PlaceholderText = "Lợi nhuận bán ra ...";
+            this.ProfitPercentTxb.PlaceholderText = "Lợi nhuận bán ra 15%";
             this.ProfitPercentTxb.SelectedText = "";
             this.ProfitPercentTxb.ShadowDecoration.Parent = this.ProfitPercentTxb;
             this.ProfitPercentTxb.Size = new System.Drawing.Size(309, 44);
@@ -427,13 +429,14 @@
             // 
             this.SupplierLb.AutoSize = true;
             this.SupplierLb.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
-            this.SupplierLb.Location = new System.Drawing.Point(-1, 115);
+            this.SupplierLb.Location = new System.Drawing.Point(0, 117);
             this.SupplierLb.Margin = new System.Windows.Forms.Padding(25, 38, 4, 6);
             this.SupplierLb.Name = "SupplierLb";
             this.SupplierLb.Size = new System.Drawing.Size(152, 25);
             this.SupplierLb.TabIndex = 18;
             this.SupplierLb.Text = "Nhà cung cấp:";
             this.SupplierLb.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.SupplierLb.Click += new System.EventHandler(this.SupplierLb_Click);
             // 
             // PrintBtn
             // 
@@ -491,7 +494,7 @@
             this.SupplierNameLb.AutoSize = true;
             this.SupplierNameLb.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
             this.SupplierNameLb.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(210)))), ((int)(((byte)(192)))));
-            this.SupplierNameLb.Location = new System.Drawing.Point(151, 117);
+            this.SupplierNameLb.Location = new System.Drawing.Point(152, 117);
             this.SupplierNameLb.Margin = new System.Windows.Forms.Padding(25, 38, 4, 6);
             this.SupplierNameLb.Name = "SupplierNameLb";
             this.SupplierNameLb.Size = new System.Drawing.Size(0, 25);

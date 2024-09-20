@@ -12,6 +12,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using System.Windows.Forms.DataVisualization.Charting;
 
 namespace BookShop_CNPM.GUI.Importer
 {
@@ -210,6 +211,7 @@ namespace BookShop_CNPM.GUI.Importer
 
 		private void AddProductToCart(BookDTO book, decimal importPrice = -1, int amount = 1, bool disabled = false)
 		{
+
 			try
 			{
 				if (importBillDetails.Count == 0 || !importBillDetails.Any(item => item.MaSach == book.MaSach))
@@ -280,7 +282,15 @@ namespace BookShop_CNPM.GUI.Importer
 					{
 						int ChoseId_int = Convert.ToInt32(BookUserControl.ChoseId);
 						BookDTO book = BookBUS.Instance.getById(BookUserControl.ChoseId);
-						AddProductToCart(book);
+						if (book.GiaBan == 0)
+						{
+                            BookUserControl.clicked = false;
+                            MessageBox.Show("Sản phẩm chưa được thỏa thuận giá bán!");
+						}
+						else
+						{
+							AddProductToCart(book);
+						}
 					}
 					else
 					{
@@ -359,7 +369,7 @@ namespace BookShop_CNPM.GUI.Importer
                     }
                     else
 					{
-                        decimal giaNhap = importBillDetail.DonGia;
+                        decimal giaNhap = importBillDetail.DonGia - 15 * importBillDetail.DonGia / 100;
                         total += importBillDetail.SoLuong * giaNhap;
                     }
                
@@ -398,9 +408,9 @@ namespace BookShop_CNPM.GUI.Importer
 					importBill.MaNhanVien = staffID;
 					importBill.MaNhaCungCap = supplierID;
 					importBill.NgayLap = DateTime.Now;
-                    importBill.PhanTramLoiNhuan = Convert.ToInt32(ProfitPercentTxb.Text);
+					importBill.PhanTramLoiNhuan = 15;
 
-                    ImportBillDTO newImportBill = ImportBillBUS.Instance.insertReturnBill(importBill);
+					ImportBillDTO newImportBill = ImportBillBUS.Instance.insertReturnBill(importBill);
 
 					if (newImportBill == null)
 					{
@@ -489,19 +499,21 @@ namespace BookShop_CNPM.GUI.Importer
 
 				int count = 1;
 				List<int> id = new List<int>();
-
+				String maNhaCungCapx = "";
+				String addName = "";
 				//Validate loop
 				foreach (DataRow row in dt.Rows)
 				{
 					if (count == 1)
 					{
-						if (!int.TryParse(row[1].ToString(), out int maNhaCungCap))
+						if (!int.TryParse(row[1].ToString(), out int maNhaCungCap) || !int.TryParse(row[3].ToString(), out int phanTramLaiSuat))
 						{
 							MessageBox.Show("Lỗi chưa chọn file hoặc file excel không đúng format dữ liệu nhập!");
 							return;
 						}
 
-						count++;
+						maNhaCungCapx = row[1].ToString();
+                        count++;
 						continue;
 					}
 
@@ -517,10 +529,12 @@ namespace BookShop_CNPM.GUI.Importer
 						return;
 					}
 
-/*Thử nghiệm*/
-					if (BookBUS.Instance.checkDuplicateName(row[1].ToString()))
+					/*Thử nghiệm*/
+					addName = row[1].ToString() + "(" + maNhaCungCapx + ")" + DateTime.Now.ToString("dd/MM/yyyy");
+
+                    if (BookBUS.Instance.checkDuplicateName(addName))
 					{
-						int maSach = BookBUS.Instance.getIdByName(row[1].ToString());
+						int maSach = BookBUS.Instance.getIdByName(addName);
                         Console.WriteLine(id.Contains(maSach));
                         BookDTO book = BookBUS.Instance.getById(maSach.ToString());
                         if (book == null || id.Contains(maSach))
@@ -546,7 +560,7 @@ namespace BookShop_CNPM.GUI.Importer
 				CartContainer.Controls.Clear();
 				importBillDetails.Clear();
 				NameInp.Enabled = false;
-				QRScanBtn.Enabled = false;
+				/*QRScanBtn.Enabled = false;*/
 				QRScanBtn.Cursor = Cursors.No;
 				importExcel = true;
 				count = 1;
@@ -559,6 +573,10 @@ namespace BookShop_CNPM.GUI.Importer
 						SupplierDTO supplier = SupplierBUS.Instance.getById(row[1].ToString());
 						supplierID = supplier.MaNhaCungCap;
 						SupplierNameLb.Text = supplier.TenNhaCungCap;
+
+						ProfitPercentTxb.Text = row[3].ToString();
+
+
 						count++;
 						continue;
 					}
@@ -571,22 +589,23 @@ namespace BookShop_CNPM.GUI.Importer
 
 					bool created = false;
 					int quantity = Convert.ToInt32(row[2].ToString());
-					/*==========================*/
-					if (!BookBUS.Instance.checkDuplicateName(row[1].ToString()) && quantity > 0)
+                    addName = row[1].ToString() + "(" + maNhaCungCapx + ")" + DateTime.Now.ToString("dd/MM/yyyy");
+                    /*==========================*/
+                    if (!BookBUS.Instance.checkDuplicateName(addName) && quantity > 0)
 					{
 						byte[] defaultImg = BitmapToByteArray(Properties.Resources.book_cover);
 						BookDTO newBook = new BookDTO();
-						newBook.TenSach = row[1].ToString();
+						newBook.TenSach = row[1].ToString() + "(" + maNhaCungCapx + ")" + DateTime.Now.ToString("dd/MM/yyyy");
                         newBook.HinhAnh = defaultImg;
 						newBook.GiaBan = Convert.ToDecimal(row[3].ToString());
 						newBook.GiaNhap = Convert.ToDecimal(row[3].ToString());
 						created = BookBUS.Instance.insert(newBook);
                         if (created)
                         {
-							MessageBox.Show("Đã tạo sách mới có tên là: \"" + row[1].ToString() + " \"!");
+							MessageBox.Show("Đã tạo sách mới có tên là: \"" + row[1].ToString() + "(" + maNhaCungCapx + ")" + DateTime.Now.ToString("dd/MM/yyyy") + " \"!");
 						}
 					}
-					BookDTO book = created ? BookBUS.Instance.getLatestBook() : BookBUS.Instance.getById(BookBUS.Instance.getIdByName(row[1].ToString()).ToString());
+					BookDTO book = created ? BookBUS.Instance.getLatestBook() : BookBUS.Instance.getById(BookBUS.Instance.getIdByName(row[1].ToString() + "(" + maNhaCungCapx + ")" + DateTime.Now.ToString("dd/MM/yyyy")).ToString());
 					if (quantity > 0)
 					{
 						AddProductToCart(book, Convert.ToDecimal(row[3].ToString()), quantity, disabled: true);
@@ -690,6 +709,16 @@ namespace BookShop_CNPM.GUI.Importer
         }
 
         private void CartContainer_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void SupplierLb_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void flowLayoutPanel4_Paint(object sender, PaintEventArgs e)
         {
 
         }

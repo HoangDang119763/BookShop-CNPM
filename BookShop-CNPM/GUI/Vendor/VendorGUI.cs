@@ -586,6 +586,7 @@ namespace BookShop_CNPM.GUI
                         }
                     }
 
+
                     CustomerBillDTO newCustomerBill = CustomerBillBUS.Instance.insertReturnBill(customerBill);
 
                     if (newCustomerBill == null)

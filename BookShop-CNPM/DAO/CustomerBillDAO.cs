@@ -252,7 +252,7 @@ namespace BookShop_CNPM.DAO
 
                 DataTable dataTable = DataProvider.Instance.ExecuteQuery(sql);
 
-                if (dataTable.Rows.Count <= 0) return null;
+                if (dataTable.Rows.Count < 0) return null;
 
                 CustomerBillDTO customerBill = new CustomerBillDTO(dataTable.Rows[0]);
 
