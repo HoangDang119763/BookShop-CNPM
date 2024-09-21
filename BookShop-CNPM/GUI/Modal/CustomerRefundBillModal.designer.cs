@@ -114,6 +114,7 @@
             this.refundBookContainer.Name = "refundBookContainer";
             this.refundBookContainer.Size = new System.Drawing.Size(883, 332);
             this.refundBookContainer.TabIndex = 14;
+            this.refundBookContainer.Paint += new System.Windows.Forms.PaintEventHandler(this.refundBookContainer_Paint);
             // 
             // label8
             // 
@@ -491,7 +492,13 @@
             this.customerBillInput.TabIndex = 0;
             this.customerBillInput.TextChanged += new System.EventHandler(this.customerBillInput_TextChanged);
             this.customerBillInput.Leave += new System.EventHandler(this.customerBillInput_Leave);
-
+            // 
+            // customerBillInputMsg
+            // 
+            this.customerBillInputMsg.Location = new System.Drawing.Point(0, 0);
+            this.customerBillInputMsg.Name = "customerBillInputMsg";
+            this.customerBillInputMsg.Size = new System.Drawing.Size(100, 23);
+            this.customerBillInputMsg.TabIndex = 0;
             // 
             // label1
             // 

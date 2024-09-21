@@ -416,5 +416,10 @@ namespace BookShop_CNPM.GUI.Modal
         {
 
         }
+
+        private void refundBookContainer_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
     }
 }

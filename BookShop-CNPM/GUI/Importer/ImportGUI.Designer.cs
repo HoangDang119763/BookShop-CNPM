@@ -71,7 +71,6 @@
             this.flowLayoutPanel4.SuspendLayout();
             this.flowLayoutPanel5.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
-            this.panel1.SuspendLayout();
             this.panel3.SuspendLayout();
             this.panel4.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
@@ -121,6 +120,7 @@
             // flowLayoutPanel4
             // 
             this.flowLayoutPanel4.Controls.Add(this.flowLayoutPanel5);
+            this.flowLayoutPanel4.Controls.Add(this.QRScanBtn);
             this.flowLayoutPanel4.Controls.Add(this.panel1);
             this.flowLayoutPanel4.Location = new System.Drawing.Point(129, 102);
             this.flowLayoutPanel4.Margin = new System.Windows.Forms.Padding(4);
@@ -183,8 +183,7 @@
             // 
             // panel1
             // 
-            this.panel1.Controls.Add(this.QRScanBtn);
-            this.panel1.Location = new System.Drawing.Point(0, 58);
+            this.panel1.Location = new System.Drawing.Point(0, 60);
             this.panel1.Margin = new System.Windows.Forms.Padding(0);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(615, 60);
@@ -207,7 +206,7 @@
             this.QRScanBtn.Image = ((System.Drawing.Image)(resources.GetObject("QRScanBtn.Image")));
             this.QRScanBtn.ImageAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.QRScanBtn.ImageSize = new System.Drawing.Size(26, 26);
-            this.QRScanBtn.Location = new System.Drawing.Point(559, 4);
+            this.QRScanBtn.Location = new System.Drawing.Point(372, 4);
             this.QRScanBtn.Margin = new System.Windows.Forms.Padding(4);
             this.QRScanBtn.Name = "QRScanBtn";
             this.QRScanBtn.OnHoverBaseColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(210)))), ((int)(((byte)(192)))));
@@ -333,7 +332,7 @@
             this.ProfitPercentTxb.Name = "ProfitPercentTxb";
             this.ProfitPercentTxb.PasswordChar = '\0';
             this.ProfitPercentTxb.PlaceholderForeColor = System.Drawing.Color.DarkGray;
-            this.ProfitPercentTxb.PlaceholderText = "Lợi nhuận bán ra 15%";
+            this.ProfitPercentTxb.PlaceholderText = "Lợi nhuận bán ra...";
             this.ProfitPercentTxb.SelectedText = "";
             this.ProfitPercentTxb.ShadowDecoration.Parent = this.ProfitPercentTxb;
             this.ProfitPercentTxb.Size = new System.Drawing.Size(309, 44);
@@ -429,7 +428,7 @@
             // 
             this.SupplierLb.AutoSize = true;
             this.SupplierLb.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
-            this.SupplierLb.Location = new System.Drawing.Point(0, 117);
+            this.SupplierLb.Location = new System.Drawing.Point(-5, 117);
             this.SupplierLb.Margin = new System.Windows.Forms.Padding(25, 38, 4, 6);
             this.SupplierLb.Name = "SupplierLb";
             this.SupplierLb.Size = new System.Drawing.Size(152, 25);
@@ -688,7 +687,6 @@
             this.flowLayoutPanel4.ResumeLayout(false);
             this.flowLayoutPanel5.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
-            this.panel1.ResumeLayout(false);
             this.panel3.ResumeLayout(false);
             this.panel4.ResumeLayout(false);
             this.panel4.PerformLayout();

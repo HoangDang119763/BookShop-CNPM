@@ -515,12 +515,12 @@ namespace BookShop_CNPM.GUI.Manager
             try
             {
                 bool isHaveSelect = false;
-
+                int maSachTicked = -1;
                 foreach (DataGridViewRow row in this.dgvBook.Rows)
                 {
                     if ((bool)row.Cells[0].Value && Convert.ToInt32(row.Cells[9].Value)==0)
                     {
-                    
+                        maSachTicked = Convert.ToInt32(row.Cells[1].Value);
                         isHaveSelect = true;
                         break;
                     }
@@ -532,6 +532,25 @@ namespace BookShop_CNPM.GUI.Manager
                     MessageBox.Show("Bạn chưa chọn những sách cần xóa hoặc sách vẫn còn tồn kho");
                     return;
                 }
+
+
+                /*Tạo danh sách các phiếu bán cách hiện tại 7 ngày rồi lấy ra những mã sách có trong đó*/
+                List<CustomerBillDTO> customerBillList = CustomerBillBUS.Instance.getAllInLast7Days();
+          
+                foreach(var customerBill in customerBillList)
+                {
+                    List<CustomerBillDetailDTO> customerBillDetails = CustomerBillBUS.Instance.getCustomerBillDetailList(customerBill.MaDonKhachHang.ToString());
+                    foreach (var customerBillDetail in customerBillDetails)
+                    {
+                        if (customerBillDetail.MaSach == maSachTicked)
+                        {
+                            MessageBox.Show("Sách này vẫn còn trong thời hạn có thể đổi trả (<7 ngày)");
+                            return;
+                        }
+                    }
+                }
+
+
 
                 DialogResult dlgResult = MessageBox.Show(
                     "Bạn chắc chắn muốn xóa các sách đã chọn chứ?",
@@ -683,6 +702,11 @@ namespace BookShop_CNPM.GUI.Manager
             {
                 Console.WriteLine(ex);
             }
+        }
+
+        private void dgvBook_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
         }
     }
 }

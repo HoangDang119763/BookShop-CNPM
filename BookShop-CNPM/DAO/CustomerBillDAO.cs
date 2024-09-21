@@ -47,7 +47,33 @@ namespace BookShop_CNPM.DAO
 			return dataTable;
 		}
 
-		public CustomerBillDetailDTO getCustomerBillDetail(string billId, string bookId)
+        /*=======================================*/
+        public DataTable getAllInLast7Days()
+        {
+            // Lấy ngày hiện tại
+            DateTime today = DateTime.Now;
+            // Tính toán ngày bắt đầu (7 ngày trước)
+            DateTime startDate = today.AddDays(-7);
+
+            // Chuyển đổi ngày thành định dạng chuỗi (nếu cần)
+            string startDateString = startDate.ToString("yyyy-MM-dd");
+            string todayString = today.ToString("yyyy-MM-dd");
+
+            // Tạo truy vấn SQL
+            DataTable dataTable = DataProvider.Instance.ExecuteQuery(
+                "SELECT * FROM phieuban WHERE ngayLap >= @startDate AND ngayLap < @today;",
+                new MySqlParameter[] {
+            new MySqlParameter("@startDate", startDateString),
+            new MySqlParameter("@today", todayString)
+                }
+            );
+
+            if (dataTable.Rows.Count <= 0) return null;
+
+            return dataTable;
+        }
+
+        public CustomerBillDetailDTO getCustomerBillDetail(string billId, string bookId)
         {
             DataTable dataTable = DataProvider.Instance.ExecuteQuery(
                 "SELECT * FROM chitietphieuban WHERE maDonKhachHang=@maDonKhachHang AND maSach=@maSach;",

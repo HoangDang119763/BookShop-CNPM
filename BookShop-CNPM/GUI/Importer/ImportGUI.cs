@@ -289,13 +289,15 @@ namespace BookShop_CNPM.GUI.Importer
 						}
 						else
 						{
-							AddProductToCart(book);
-						}
+                            BookUserControl.clicked = false;
+                            MessageBox.Show("Phải nhập hàng qua excel!");
+
+                        }
 					}
 					else
 					{
 						BookUserControl.clicked = false;
-					}
+                    }
 				}
 
 				if (ImportCartProductUserControl.deletePress)
@@ -530,7 +532,7 @@ namespace BookShop_CNPM.GUI.Importer
 					}
 
 					/*Thử nghiệm*/
-					addName = row[1].ToString() + "(" + maNhaCungCapx + ")" + DateTime.Now.ToString("dd/MM/yyyy");
+					addName = row[1].ToString() + "(" + maNhaCungCapx + ")-" + DateTime.Now.ToString("dd/MM/yyyy");
 
                     if (BookBUS.Instance.checkDuplicateName(addName))
 					{
@@ -589,23 +591,23 @@ namespace BookShop_CNPM.GUI.Importer
 
 					bool created = false;
 					int quantity = Convert.ToInt32(row[2].ToString());
-                    addName = row[1].ToString() + "(" + maNhaCungCapx + ")" + DateTime.Now.ToString("dd/MM/yyyy");
+                    addName = row[1].ToString() + "(" + maNhaCungCapx + ")-" + DateTime.Now.ToString("dd/MM/yyyy");
                     /*==========================*/
                     if (!BookBUS.Instance.checkDuplicateName(addName) && quantity > 0)
 					{
 						byte[] defaultImg = BitmapToByteArray(Properties.Resources.book_cover);
 						BookDTO newBook = new BookDTO();
-						newBook.TenSach = row[1].ToString() + "(" + maNhaCungCapx + ")" + DateTime.Now.ToString("dd/MM/yyyy");
+						newBook.TenSach = row[1].ToString() + "(" + maNhaCungCapx + ")-" + DateTime.Now.ToString("dd/MM/yyyy");
                         newBook.HinhAnh = defaultImg;
 						newBook.GiaBan = Convert.ToDecimal(row[3].ToString());
 						newBook.GiaNhap = Convert.ToDecimal(row[3].ToString());
 						created = BookBUS.Instance.insert(newBook);
                         if (created)
                         {
-							MessageBox.Show("Đã tạo sách mới có tên là: \"" + row[1].ToString() + "(" + maNhaCungCapx + ")" + DateTime.Now.ToString("dd/MM/yyyy") + " \"!");
+							MessageBox.Show("Đã tạo sách mới có tên là: \"" + row[1].ToString() + "(" + maNhaCungCapx + ")-" + DateTime.Now.ToString("dd/MM/yyyy") + " \"!");
 						}
 					}
-					BookDTO book = created ? BookBUS.Instance.getLatestBook() : BookBUS.Instance.getById(BookBUS.Instance.getIdByName(row[1].ToString() + "(" + maNhaCungCapx + ")" + DateTime.Now.ToString("dd/MM/yyyy")).ToString());
+					BookDTO book = created ? BookBUS.Instance.getLatestBook() : BookBUS.Instance.getById(BookBUS.Instance.getIdByName(row[1].ToString() + "(" + maNhaCungCapx + ")-" + DateTime.Now.ToString("dd/MM/yyyy")).ToString());
 					if (quantity > 0)
 					{
 						AddProductToCart(book, Convert.ToDecimal(row[3].ToString()), quantity, disabled: true);
