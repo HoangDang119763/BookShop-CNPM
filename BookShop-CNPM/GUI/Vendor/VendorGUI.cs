@@ -587,7 +587,37 @@ namespace BookShop_CNPM.GUI
                     }
 
 
+                    if (customerBill.MaKhachHang == 0) {
+                        List<SaleDTO> checkIfExistSaleId = SaleBUS.Instance.search("Khong co khuyen mai");
+                        if (checkIfExistSaleId == null)
+                        {
+                            SaleDTO newSale = new SaleDTO(
+                                customerBill.MaKhuyenMai,
+                                "Khong co khuyen mai",
+                                0,
+                                customerBill.NgayLap,
+                                customerBill.NgayLap.AddDays(1)
+                            );
+                            customerBill.MaKhuyenMai = newSale.MaKhuyenMai;
+                            SaleBUS.Instance.insert(newSale);
+                        }
+                        else
+                        {
+                            customerBill.MaKhuyenMai = checkIfExistSaleId[0].MaKhuyenMai;
+                        }
+                    }
+
+
+                    // Debug
+                    Console.WriteLine("Tổng tiền: " + customerBill.TongTien);
+                    Console.WriteLine("Tiền khách đưa: " + customerBill.TienKhachDua);
+                    Console.WriteLine("Mã nhân viên: " + customerBill.MaNhanVien);
+                    Console.WriteLine("Mã khách hàng: " + customerBill.MaKhachHang);
+                    Console.WriteLine("Mã khuyến mãi: " + customerBill.MaKhuyenMai);
+                    Console.WriteLine("Ngày lập: " + customerBill.NgayLap);
+
                     CustomerBillDTO newCustomerBill = CustomerBillBUS.Instance.insertReturnBill(customerBill);
+
 
                     if (newCustomerBill == null)
                     {
