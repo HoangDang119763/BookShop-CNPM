@@ -65,13 +65,21 @@ namespace BookShop_CNPM.DAO
 
         public bool checkDuplicateName(string value)
         {
-            DataTable dataTable = DataProvider.Instance.ExecuteQuery("select * from sach WHERE LOWER(tenSach)=LOWER(@tenSach) and hienThi=1;",
+/**/
+            DataTable dataTable = DataProvider.Instance.ExecuteQuery("select * from sach WHERE LOWER(tenSach)=LOWER(@tenSach);",
                 new MySqlParameter[] {
                     new MySqlParameter("@tenSach", value.Trim().ToLower())
                 }
             );
 
             if (dataTable.Rows.Count <= 0) return false;
+
+            // Cập nhật trường hienThi thành 1 cho sách có tên trùng
+            DataProvider.Instance.ExecuteNonQuery("UPDATE sach SET hienThi = 1 WHERE LOWER(tenSach) = LOWER(@tenSach);",
+                new MySqlParameter[] {
+            new MySqlParameter("@tenSach", value.Trim().ToLower())
+                }
+            );
 
             return true;
         }

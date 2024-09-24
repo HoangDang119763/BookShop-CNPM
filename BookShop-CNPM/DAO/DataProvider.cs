@@ -9,8 +9,8 @@ namespace BookShop_CNPM.DAO
         private string serverName = "localhost";
         private string databaseName = "qlchs_cnpm";
         private string username = "root";
-        private string password = "1234";
-        private string port = "3305";
+        private string password = "110604";
+        private string port = "3306";
         private MySqlConnection connect = null;
         private static DataProvider instance;
 

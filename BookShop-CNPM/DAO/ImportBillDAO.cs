@@ -101,30 +101,30 @@ namespace BookShop_CNPM.DAO
             BookDTO book = BookBUS.Instance.getById(data.MaSach.ToString());
 
             /*===================================================*/
-            /*     if (book.GiaBan <= giaBan)
-                 {
-                     rowChanged = DataProvider.Instance.ExecuteNonQuery(sql,
-                         new MySqlParameter[] {
-                             new MySqlParameter("@giaBan", giaBan),
-                             new MySqlParameter("@giaNhap", data.DonGia),
-                             new MySqlParameter("@maSach", data.MaSach),
-                         });
-                 }
-                 else
-                 {
-                     rowChanged = DataProvider.Instance.ExecuteNonQuery(sql,
-                         new MySqlParameter[] {
-                             new MySqlParameter("@giaBan", book.GiaBan),
-                             new MySqlParameter("@giaNhap", data.DonGia),
-                             new MySqlParameter("@maSach", data.MaSach),
-                         });
-                 }*/
-            rowChanged = DataProvider.Instance.ExecuteNonQuery(sql,
+            if (book.GiaBan < data.DonGia)
+            {
+                rowChanged = DataProvider.Instance.ExecuteNonQuery(sql,
                     new MySqlParameter[] {
-                        new MySqlParameter("@giaBan", data.DonGia),
-                        new MySqlParameter("@giaNhap", giaNhap),
-                        new MySqlParameter("@maSach", data.MaSach),
+                             new MySqlParameter("@giaBan", data.DonGia),
+                             new MySqlParameter("@giaNhap", giaNhap),
+                             new MySqlParameter("@maSach", data.MaSach),
                     });
+            }
+            else if (book.GiaBan == data.DonGia)
+            {
+                rowChanged = DataProvider.Instance.ExecuteNonQuery(sql,
+                    new MySqlParameter[] {
+                             new MySqlParameter("@giaBan", book.GiaBan),
+                             new MySqlParameter("@giaNhap", giaNhap),
+                             new MySqlParameter("@maSach", data.MaSach),
+                    });
+            }
+            /*  rowChanged = DataProvider.Instance.ExecuteNonQuery(sql,
+                      new MySqlParameter[] {
+                          new MySqlParameter("@giaBan", data.DonGia),
+                          new MySqlParameter("@giaNhap", giaNhap),
+                          new MySqlParameter("@maSach", data.MaSach),
+                      });*/
 
 
             // thêm sách

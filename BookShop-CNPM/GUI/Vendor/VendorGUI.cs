@@ -212,26 +212,29 @@ namespace BookShop_CNPM.GUI
                     {
                         PhoneResultContainer.Controls.Clear();
                         String query = PhoneInp.Text;
-                        List<CustomerDTO> customers = CustomerBUS.Instance.SearchByPhoneNum(query);
-                        if (customers != null)
+                        if (query != "0")
                         {
-                            foreach (var customer in customers)
+                            List<CustomerDTO> customers = CustomerBUS.Instance.SearchByPhoneNum(query);
+                            if (customers != null)
                             {
-                                SearchResultControl res = new SearchResultControl();
-                                res.details_Vendor(customer);
-                                res.TabStop = false;
-                                PhoneResultContainer.Controls.Add(res);
+                                foreach (var customer in customers)
+                                {
+                                    SearchResultControl res = new SearchResultControl();
+                                    res.details_Vendor(customer);
+                                    res.TabStop = false;
+                                    PhoneResultContainer.Controls.Add(res);
+                                }
                             }
+                            if (PhoneResultContainer.Controls.Count <= 4)
+                            {
+                                PhoneResultContainer.Width = 244;
+                            }
+                            else
+                            {
+                                PhoneResultContainer.Width = 261;
+                            }
+                            PhoneResultContainer.Height = PhoneResultContainer.Controls.Count * 45;
                         }
-                        if (PhoneResultContainer.Controls.Count <= 4)
-                        {
-                            PhoneResultContainer.Width = 244;
-                        }
-                        else
-                        {
-                            PhoneResultContainer.Width = 261;
-                        }
-                        PhoneResultContainer.Height = PhoneResultContainer.Controls.Count * 45;
                     }
                     else
                     {
@@ -563,6 +566,23 @@ namespace BookShop_CNPM.GUI
                     customerBill.MaNhanVien = staffID;
                     customerBill.MaKhachHang = CustomerEnabled ? customerID : 0;
                     customerBill.MaKhuyenMai = Convert.ToInt32(DiscountCb.SelectedValue);
+                    /*List<SaleDTO> checkIfExistSaleId = SaleBUS.Instance.search("Không có khuyến mãi");
+                        if (checkIfExistSaleId == null)
+                        {
+                            SaleDTO newSale = new SaleDTO(
+                                customerBill.MaKhuyenMai,
+                                "Không có khuyến mãi",
+                                0,
+                                customerBill.NgayLap,
+                                customerBill.NgayLap.AddDays(1)
+                            );
+                            customerBill.MaKhuyenMai = newSale.MaKhuyenMai;
+                            SaleBUS.Instance.insert(newSale);
+                        }
+                        else
+                        {
+                            customerBill.MaKhuyenMai = checkIfExistSaleId[0].MaKhuyenMai;
+                        }*/
                     customerBill.NgayLap = DateTime.Now;
                     if (DiscountCb.SelectedIndex != 0)
                     {
@@ -583,27 +603,6 @@ namespace BookShop_CNPM.GUI
                         else
                         {
                             customerBill.DoiDiem = CustomerBUS.Instance.getById(customerID.ToString()).Diem;
-                        }
-                    }
-
-
-                    if (customerBill.MaKhachHang == 0) {
-                        List<SaleDTO> checkIfExistSaleId = SaleBUS.Instance.search("Khong co khuyen mai");
-                        if (checkIfExistSaleId == null)
-                        {
-                            SaleDTO newSale = new SaleDTO(
-                                customerBill.MaKhuyenMai,
-                                "Khong co khuyen mai",
-                                0,
-                                customerBill.NgayLap,
-                                customerBill.NgayLap.AddDays(1)
-                            );
-                            customerBill.MaKhuyenMai = newSale.MaKhuyenMai;
-                            SaleBUS.Instance.insert(newSale);
-                        }
-                        else
-                        {
-                            customerBill.MaKhuyenMai = checkIfExistSaleId[0].MaKhuyenMai;
                         }
                     }
 

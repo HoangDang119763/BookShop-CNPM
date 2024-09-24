@@ -56,15 +56,17 @@ namespace BookShop_CNPM.BUS
 			return customerBillList;
 		}
 
-        public List<CustomerBillDTO> getAllInLast7Days()
-        {
-            List<CustomerBillDTO> customerBillList = new List<CustomerBillDTO>();
-            DataTable dt = CustomerBillDAO.Instance.getAllInLast7Days();
-            foreach (DataRow row in dt.Rows)
-            {
-                CustomerBillDTO customerBill = new CustomerBillDTO(row);
-                customerBillList.Add(customerBill);
-            }
+		public List<CustomerBillDTO> getAllInLast7Days()
+		{
+			List<CustomerBillDTO> customerBillList = new List<CustomerBillDTO>();
+			DataTable dt = CustomerBillDAO.Instance.getAllInLast7Days();
+			if (dt != null) {
+	
+			foreach (DataRow row in dt.Rows)
+			{
+				CustomerBillDTO customerBill = new CustomerBillDTO(row);
+				customerBillList.Add(customerBill);
+			} }
 
             return customerBillList;
         }

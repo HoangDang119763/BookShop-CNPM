@@ -37,8 +37,8 @@
             this.flowLayoutPanel5 = new System.Windows.Forms.FlowLayoutPanel();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.ProductSearchInp = new Guna.UI2.WinForms.Guna2TextBox();
-            this.panel1 = new System.Windows.Forms.Panel();
             this.QRScanBtn = new Guna.UI.WinForms.GunaButton();
+            this.panel1 = new System.Windows.Forms.Panel();
             this.BookContainer = new System.Windows.Forms.FlowLayoutPanel();
             this.panel3 = new System.Windows.Forms.Panel();
             this.panel4 = new System.Windows.Forms.Panel();
@@ -181,14 +181,6 @@
             this.ProductSearchInp.TextChanged += new System.EventHandler(this.ProductSearchInp_TextChanged);
             this.ProductSearchInp.MouseLeave += new System.EventHandler(this.ProductSearchInp_MouseLeave);
             // 
-            // panel1
-            // 
-            this.panel1.Location = new System.Drawing.Point(0, 60);
-            this.panel1.Margin = new System.Windows.Forms.Padding(0);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(615, 60);
-            this.panel1.TabIndex = 1;
-            // 
             // QRScanBtn
             // 
             this.QRScanBtn.Animated = true;
@@ -218,6 +210,14 @@
             this.QRScanBtn.Size = new System.Drawing.Size(52, 52);
             this.QRScanBtn.TabIndex = 1;
             // 
+            // panel1
+            // 
+            this.panel1.Location = new System.Drawing.Point(0, 60);
+            this.panel1.Margin = new System.Windows.Forms.Padding(0);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(615, 60);
+            this.panel1.TabIndex = 1;
+            // 
             // BookContainer
             // 
             this.BookContainer.Anchor = System.Windows.Forms.AnchorStyles.None;
@@ -228,6 +228,7 @@
             this.BookContainer.Name = "BookContainer";
             this.BookContainer.Size = new System.Drawing.Size(984, 650);
             this.BookContainer.TabIndex = 9;
+            this.BookContainer.Paint += new System.Windows.Forms.PaintEventHandler(this.BookContainer_Paint);
             // 
             // panel3
             // 
@@ -388,6 +389,7 @@
             this.NameInp.ShadowDecoration.Parent = this.NameInp;
             this.NameInp.Size = new System.Drawing.Size(305, 45);
             this.NameInp.TabIndex = 0;
+            this.NameInp.Visible = false;
             this.NameInp.TextChanged += new System.EventHandler(this.NameInp_TextChanged);
             this.NameInp.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.NameInp_KeyPress);
             this.NameInp.MouseLeave += new System.EventHandler(this.ProductSearchInp_MouseLeave);
@@ -462,6 +464,7 @@
             this.AddCustomerBtn.Size = new System.Drawing.Size(38, 38);
             this.AddCustomerBtn.TabIndex = 1;
             this.AddCustomerBtn.UseVisualStyleBackColor = true;
+            this.AddCustomerBtn.Visible = false;
             this.AddCustomerBtn.Click += new System.EventHandler(this.AddSupplierBtn_Click);
             // 
             // label3
