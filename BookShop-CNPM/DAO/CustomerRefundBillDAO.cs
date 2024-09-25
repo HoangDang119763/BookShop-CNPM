@@ -95,6 +95,29 @@ namespace BookShop_CNPM.DAO
             return customerBillDetailList;
         }
 
+        /**/
+        public List<CustomerRefundBillDTO> getCustomerRefundBillList(string billId)
+        {
+            DataTable dataTable = DataProvider.Instance.ExecuteQuery(
+                "SELECT * FROM phieutrabanhang WHERE maDonKhachHang=@maDonKhachHang;",
+                new MySqlParameter[] {
+                    new MySqlParameter("@maDonKhachHang", billId),
+                }
+            );
+
+            if (dataTable.Rows.Count <= 0) return null;
+
+            List<CustomerRefundBillDTO> customerBillList = new List<CustomerRefundBillDTO>();
+
+            foreach (DataRow row in dataTable.Rows)
+            {
+                CustomerRefundBillDTO customerBillRefund = new CustomerRefundBillDTO(row);
+                customerBillList.Add(customerBillRefund);
+            }
+
+            return customerBillList;
+        }
+
         public DataTable searchData(string value)
         {
             string sql = $@"SELECT * FROM phieutrabanhang WHERE maPhieuTraBanHang LIKE @maPhieuTraBanHang;";
@@ -104,6 +127,31 @@ namespace BookShop_CNPM.DAO
                     new MySqlParameter("@maPhieuTraBanHang", "%" + value + "%"),
                 }
             );
+        }
+
+        /*public DataTable existData(string value)
+        {
+            string sql = $@"SELECT * FROM phieutrabanhang WHERE maDonKhachHang LIKE @maDonKhachHang;";
+
+            return DataProvider.Instance.ExecuteQuery(sql,
+                new MySqlParameter[] {
+                    new MySqlParameter("@maDonKhachHang", "%" + value + "%"),
+                }
+            );
+        }*/
+
+        public bool existData(string value)
+        {
+            string sql = @"SELECT COUNT(*) FROM phieutrabanhang WHERE maDonKhachHang LIKE @maDonKhachHang;";
+
+            DataTable dataTable = DataProvider.Instance.ExecuteQuery(sql,
+                new MySqlParameter[] {
+            new MySqlParameter("@maDonKhachHang", "%" + value + "%"),
+                }
+            );
+
+            // Kiểm tra số lượng hàng. Nếu có ít nhất 1 hàng, trả về true.
+            return dataTable.Rows.Count > 0 && Convert.ToInt32(dataTable.Rows[0][0]) > 0;
         }
 
         public bool insert(CustomerRefundBillDTO data)

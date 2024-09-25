@@ -57,6 +57,11 @@ namespace BookShop_CNPM.BUS
             return CustomerRefundBillDAO.Instance.getCustomerRefundBillDetailList(id);
         }
 
+        public List<CustomerRefundBillDTO> getCustomerRefundBillList(string id)
+        {
+            return CustomerRefundBillDAO.Instance.getCustomerRefundBillList(id);
+        }
+
         public bool createCustomerRefundBillDetail(CustomerRefundBillDetailDTO customerRefundBillDetail, string madon)
         {
             return CustomerRefundBillDAO.Instance.createCustomerRefundBillDetail(customerRefundBillDetail,madon);
@@ -75,6 +80,11 @@ namespace BookShop_CNPM.BUS
             }
 
             return customerRefundBillList;
+        }
+
+        public bool exist(string value)
+        {
+           return CustomerRefundBillDAO.Instance.existData(value);
         }
 
         public bool insert(CustomerRefundBillDTO customerRefundBill)

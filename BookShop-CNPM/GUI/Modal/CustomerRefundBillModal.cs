@@ -375,6 +375,18 @@ namespace BookShop_CNPM.GUI.Modal
 							}
 							this.isSubmitSuccess = true;
                             MessageBox.Show("Thành công");
+                            decimal baseMoney = 50000;
+                            int point = Convert.ToInt32(Convert.ToInt32(this.totalMoney.Text) / baseMoney);
+                            var customerBill = CustomerBillBUS.Instance.getById(this.customerBillInput.Text);
+                            
+                            CustomerDTO customer_subPoint = CustomerBUS.Instance.getById(customerBill.MaKhachHang.ToString());
+                            customer_subPoint.Diem -= point;
+                            CustomerBUS.Instance.update(customer_subPoint);
+                            if (point > 0)
+                            {
+                                MessageBox.Show("Khách hàng " + customer_subPoint.Ten + " bị trừ: " + point + " điểm");
+                            }
+                          
                             this.Close();
 						}
 					}

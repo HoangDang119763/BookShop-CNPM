@@ -10,6 +10,7 @@ using System.Windows.Media;
 using Color = System.Drawing.Color;
 using System.Threading.Tasks;
 using System.Drawing;
+using System.Windows.Interop;
 
 namespace BookShop_CNPM.GUI.Manager
 {
@@ -87,11 +88,25 @@ namespace BookShop_CNPM.GUI.Manager
 					Labels = strLabel
 				});
 				List<CustomerBillDTO> billList = CustomerBillBUS.Instance.getAllInRange(now.Year.ToString(), (month - 5).ToString(), month.ToString()) ?? new List<CustomerBillDTO>();
+
 				decimal tongTienBill = 0;
-				foreach (CustomerBillDTO bill in billList)
-				{
-					tongTienBill += bill.TongTien;
-				}
+
+                /**/
+                foreach (CustomerBillDTO bill in billList)
+                {
+                    tongTienBill += bill.TongTien;
+                    if (CustomerRefundBillBUS.Instance.exist(bill.MaDonKhachHang.ToString()))
+                    {
+                        List<CustomerRefundBillDTO> refundbillList = CustomerRefundBillBUS.Instance.getCustomerRefundBillList(bill.MaDonKhachHang.ToString());
+                        foreach (CustomerRefundBillDTO refundbill in refundbillList)
+                        {
+                            tongTienBill -= refundbill.TongTien;
+                            /**/
+                        }
+                    }
+                
+                }
+
 				decimal maxValRounded = RoundToNearestTenThousand(tongTienBill);
 
 				List<string> strValueLabel = new List<string>();
@@ -125,13 +140,30 @@ namespace BookShop_CNPM.GUI.Manager
 					if (billList != null)
 					{
                         decimal doanhThu = 0;
-						foreach (CustomerBillDTO bill in billList)
+                        foreach (CustomerBillDTO bill in billList)
+                        {
+							if (bill.NgayLap.Month == m)
+							{
+								doanhThu += bill.TongTien;
+								if (CustomerRefundBillBUS.Instance.exist(bill.MaDonKhachHang.ToString()))
+								{
+									List<CustomerRefundBillDTO> refundbillList = CustomerRefundBillBUS.Instance.getCustomerRefundBillList(bill.MaDonKhachHang.ToString());
+									foreach (CustomerRefundBillDTO refundbill in refundbillList)
+									{
+                                        doanhThu -= refundbill.TongTien;
+										/**/
+									}
+								}
+							}
+
+                        }
+/*                        foreach (CustomerBillDTO bill in billList)
 						{
 							if (bill.NgayLap.Month == m)
 							{
 								doanhThu += bill.TongTien;
 							}
-						}
+						}*/
 						chartVals.Add(Convert.ToDecimal(doanhThu / Convert.ToDecimal(50000.0)));
 					}
 					else
@@ -162,7 +194,10 @@ namespace BookShop_CNPM.GUI.Manager
                     {
                         bookSold += Convert.ToInt32(row["soLuong"]);
                     }
-                }
+                } else
+				{
+					MessageBox.Show("Gà");
+				}
 
 				bookSoldLb.Text = $@"{bookSold} quyển sách";
 
@@ -197,18 +232,42 @@ namespace BookShop_CNPM.GUI.Manager
 				{
 					foreach (CustomerBillDTO bill in billList)
 					{
-						
-
-						dgvBill.Rows.Add(new object[] {
-							bill.NgayLap.ToString("dd/MM/yyyy"),
-							bill.MaDonKhachHang,
+                        
+						if (CustomerRefundBillBUS.Instance.exist(bill.MaDonKhachHang.ToString()))
+						{
+                            dgvBill.Rows.Add(new object[] {
+                            bill.NgayLap.ToString("dd/MM/yyyy"),
+                            bill.MaDonKhachHang,
+                            bill.PhanTramKhuyenMai != 0 ? string.Format("{0:N0} VNĐ", DiscountMoneyCal(bill.PhanTramKhuyenMai, bill.TongTien, bill.DoiDiem)) : "Không khuyến mãi",
+                            bill.DoiDiem > 0 ? string.Format("{0:N0} VNĐ", bill.DoiDiem * 1000) : "Không có",
+                            string.Format("{0:N0} VNĐ", bill.TongTien)
+                            });
+                            List<CustomerRefundBillDTO> refundbillList = CustomerRefundBillBUS.Instance.getCustomerRefundBillList(bill.MaDonKhachHang.ToString());
+							foreach (CustomerRefundBillDTO refundbill in refundbillList)
+							{
+								dgvBill.Rows.Add(new object[] {
+							refundbill.NgayLap.ToString("dd/MM/yyyy"),
+							refundbill.MaDonKhachHang,
 							bill.PhanTramKhuyenMai != 0 ? string.Format("{0:N0} VNĐ", DiscountMoneyCal(bill.PhanTramKhuyenMai, bill.TongTien, bill.DoiDiem)) : "Không khuyến mãi",
 							bill.DoiDiem > 0 ? string.Format("{0:N0} VNĐ", bill.DoiDiem * 1000) : "Không có",
-							string.Format("{0:N0} VNĐ", bill.TongTien)
-						});
+                            "-" + string.Format("{0:N0} VNĐ", refundbill.TongTien)
+							});
+								/**/
+
+							}
+						} else
+						{
+                            dgvBill.Rows.Add(new object[] {
+                            bill.NgayLap.ToString("dd/MM/yyyy"),
+                            bill.MaDonKhachHang,
+                            bill.PhanTramKhuyenMai != 0 ? string.Format("{0:N0} VNĐ", DiscountMoneyCal(bill.PhanTramKhuyenMai, bill.TongTien, bill.DoiDiem)) : "Không khuyến mãi",
+                            bill.DoiDiem > 0 ? string.Format("{0:N0} VNĐ", bill.DoiDiem * 1000) : "Không có",
+                            string.Format("{0:N0} VNĐ", bill.TongTien)
+                            });
+                        }
 					}
 				}
-				dgvBill.Sort(dgvBill.Columns["Column6"], System.ComponentModel.ListSortDirection.Descending);
+				dgvBill.Sort(dgvBill.Columns["Column3"], System.ComponentModel.ListSortDirection.Ascending);
 			}
 
 			catch (Exception ex)
@@ -290,8 +349,16 @@ namespace BookShop_CNPM.GUI.Manager
 			try
 			{
 				List<CustomerBillDTO> billList = CustomerBillBUS.Instance.getAllData();
-				loadBillListToDataView(billList);
-				loadChartView();
+				if (billList == null || billList.Count == 0)
+				{
+					MessageBox.Show("Chưa có hóa đơn nào được thanh toán!");
+					return; // Thoát khỏi phương thức nếu không có hóa đơn
+				}
+				else
+				{
+					loadBillListToDataView(billList);
+					loadChartView();
+				}
 			}
 			catch (Exception ex)
 			{
@@ -567,5 +634,10 @@ namespace BookShop_CNPM.GUI.Manager
 			this.modeCheck.Stop();
 			Hide();
 		}
-	}
+
+        private void dgvBill_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
+    }
 }

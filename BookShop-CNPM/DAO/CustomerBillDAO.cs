@@ -137,7 +137,7 @@ namespace BookShop_CNPM.DAO
 
 		public decimal getRevenueInRange(string year, string startMonth, string endMonth)
 		{
-			DataTable dataTable = DataProvider.Instance.ExecuteQuery(
+            /*DataTable dataTable = DataProvider.Instance.ExecuteQuery(
 				"SELECT SUM(tongTien) AS doanhThu FROM phieuban WHERE YEAR(ngayLap)=@nam AND MONTH(ngayLap) >= @thangBatDau AND MONTH(ngayLap) <= @thangKetThuc;",
 				new MySqlParameter[] {
 					new MySqlParameter("@nam", year),
@@ -145,27 +145,75 @@ namespace BookShop_CNPM.DAO
 					new MySqlParameter("@thangKetThuc", endMonth)
 				}
 
-			);
+			);*/
 
-			if (dataTable.Rows.Count <= 0 || dataTable.Rows[0]["doanhThu"] == DBNull.Value) return 0;
+            DataTable dataTable = DataProvider.Instance.ExecuteQuery(
+       @"
+        SELECT 
+            COALESCE(SUM(pb.tongTien), 0) - COALESCE(SUM(pt.tongTien), 0) AS doanhThu
+        FROM 
+            phieuban pb
+        LEFT JOIN 
+            phieutrabanhang pt ON pb.maDonKhachHang = pt.maDonKhachHang
+        WHERE 
+            YEAR(pb.ngayLap) = @nam 
+            AND MONTH(pb.ngayLap) >= @thangBatDau 
+            AND MONTH(pb.ngayLap) <= @thangKetThuc;",
+       new MySqlParameter[] {
+            new MySqlParameter("@nam", year),
+            new MySqlParameter("@thangBatDau", startMonth),
+            new MySqlParameter("@thangKetThuc", endMonth)
+       }
+   );
+
+
+            if (dataTable.Rows.Count <= 0 || dataTable.Rows[0]["doanhThu"] == DBNull.Value) return 0;
 
 			return Convert.ToDecimal(dataTable.Rows[0]["doanhThu"]);
 		}
 
 		public DataTable getBookSoldInRange(string year, string startMonth, string endMonth)
         {
+            /*     DataTable dataTable = DataProvider.Instance.ExecuteQuery(
+                     "SELECT MONTH(ngayLap) AS thang, SUM(chitietphieuban.soLuong) AS soLuong " +
+                     "FROM phieuban JOIN chitietphieuban ON phieuban.maDonKhachHang = chitietphieuban.maDonKhachHang " +
+                     "WHERE YEAR(ngayLap)=@nam AND MONTH(ngayLap) >= @thangBatDau AND MONTH(ngayLap) <= @thangKetThuc " +
+                     "GROUP BY thang " +
+                     "ORDER BY thang;",
+                     new MySqlParameter[] {
+                         new MySqlParameter("@nam", year),
+                         new MySqlParameter("@thangBatDau", startMonth),
+                         new MySqlParameter("@thangKetThuc", endMonth)
+                     }
+                 );*/
             DataTable dataTable = DataProvider.Instance.ExecuteQuery(
-                "SELECT MONTH(ngayLap) AS thang, SUM(chitietphieuban.soLuong) AS soLuong " +
-                "FROM phieuban JOIN chitietphieuban ON phieuban.maDonKhachHang = chitietphieuban.maDonKhachHang " +
-				"WHERE YEAR(ngayLap)=@nam AND MONTH(ngayLap) >= @thangBatDau AND MONTH(ngayLap) <= @thangKetThuc " +
-                "GROUP BY thang " +
-                "ORDER BY thang;",
-                new MySqlParameter[] {
-                    new MySqlParameter("@nam", year),
-                    new MySqlParameter("@thangBatDau", startMonth),
-                    new MySqlParameter("@thangKetThuc", endMonth)
-                }
-            );
+    @"
+    SELECT 
+        MONTH(pb.ngayLap) AS thang, 
+        (COALESCE(SUM(cp.soLuong), 0) - COALESCE(SUM(ctp.soLuong), 0)) AS soLuong
+    FROM 
+        phieuban pb
+    JOIN 
+        chitietphieuban cp ON pb.maDonKhachHang = cp.maDonKhachHang
+    LEFT JOIN 
+        phieutrabanhang tbh ON pb.maDonKhachHang = tbh.maDonKhachHang
+    LEFT JOIN 
+        chitietphieutrabanhang ctp ON tbh.maPhieuTraBanHang = ctp.maPhieuTraBanHang 
+    WHERE 
+        YEAR(pb.ngayLap) = @nam 
+        AND MONTH(pb.ngayLap) >= @thangBatDau 
+        AND MONTH(pb.ngayLap) <= @thangKetThuc 
+    GROUP BY 
+        thang 
+    ORDER BY 
+        thang;",
+    new MySqlParameter[] {
+        new MySqlParameter("@nam", year),
+        new MySqlParameter("@thangBatDau", startMonth),
+        new MySqlParameter("@thangKetThuc", endMonth)
+    }
+);
+
 
             if (dataTable.Rows.Count <= 0) return null;
 
@@ -226,14 +274,28 @@ namespace BookShop_CNPM.DAO
 
 		public decimal getCustomerBoughtTotal(string customerId)
 		{
-			DataTable dataTable = DataProvider.Instance.ExecuteQuery(
+            /*DataTable dataTable = DataProvider.Instance.ExecuteQuery(
 				"SELECT SUM(tongTien) AS daMua FROM phieuban WHERE maKhachHang=@maKhachHang;",
 				new MySqlParameter[] {
 					new MySqlParameter("@maKhachHang", customerId),
 				}
-			);
+			);*/
+            DataTable dataTable = DataProvider.Instance.ExecuteQuery(
+        @"
+        SELECT 
+            COALESCE(SUM(pb.tongTien), 0) - COALESCE(SUM(pt.tongTien), 0) AS daMua
+        FROM 
+            phieuban pb
+        LEFT JOIN 
+            phieutrabanhang pt ON pb.maDonKhachHang = pt.maDonKhachHang
+        WHERE 
+            pb.maKhachHang = @maKhachHang;",
+        new MySqlParameter[] {
+            new MySqlParameter("@maKhachHang", customerId),
+        }
+    );
 
-			if (dataTable.Rows.Count <= 0 || dataTable.Rows[0]["daMua"] == DBNull.Value) return 0;
+            if (dataTable.Rows.Count <= 0 || dataTable.Rows[0]["daMua"] == DBNull.Value) return 0;
 
 			return Convert.ToDecimal(dataTable.Rows[0]["daMua"]);
 		}
