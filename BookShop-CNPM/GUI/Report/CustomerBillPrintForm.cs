@@ -42,8 +42,8 @@ namespace BookShop_CNPM.GUI.Report
                     count,
                     book.TenSach,
                     customerBillDetail.SoLuong,
-                    customerBillDetail.DonGia,
-                    customerBillDetail.ThanhTien
+                    string.Format("{0:N0} VNĐ", customerBillDetail.DonGia),
+                    string.Format("{0:N0} VNĐ", customerBillDetail.ThanhTien)
                 );
 
                 giaGoc += customerBillDetail.ThanhTien;

@@ -1,4 +1,4 @@
-﻿using System;
+﻿/*using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using Microsoft.Reporting.WinForms;
@@ -66,6 +66,79 @@ namespace BookShop_CNPM.GUI.Report
             reportViewer1.LocalReport.DataSources.Clear();
             reportViewer1.LocalReport.DataSources.Add(reportDataSource);
             this.reportViewer1.LocalReport.SetParameters(p);
+            this.reportViewer1.RefreshReport();
+        }
+    }
+}
+*/
+using System;
+using System.Collections.Generic;
+using System.Windows.Forms;
+using Microsoft.Reporting.WinForms;
+using BookShop_CNPM.BUS;
+using BookShop_CNPM.DTO;
+
+namespace BookShop_CNPM.GUI.Report
+{
+    public partial class ImportBillPrintForm : Form
+    {
+        private int maDonNhapHang;
+
+        public ImportBillPrintForm(int maDonNhapHang)
+        {
+            InitializeComponent();
+            this.maDonNhapHang = maDonNhapHang;
+        }
+
+        private void ImportBillPrintForm_Load(object sender, EventArgs e)
+        {
+            List<ImportBillDetailDTO> importBillDetailList = ImportBillBUS.Instance.getImportBillDetailList(maDonNhapHang.ToString());
+            ImportBillDTO importBill = ImportBillBUS.Instance.getById(maDonNhapHang.ToString());
+            StaffDTO staff = StaffBUS.Instance.getById(importBill.MaNhanVien.ToString());
+            SupplierDTO supplier = SupplierBUS.Instance.getById(importBill.MaNhaCungCap.ToString());
+
+            System.Data.DataTable dataTable = this.bookDataSet1.Tables[0];
+
+            int count = 1;
+            int amount = 0;
+
+            foreach (ImportBillDetailDTO importBillDetail in importBillDetailList)
+            {
+                BookDTO book = BookBUS.Instance.getById(importBillDetail.MaSach.ToString());
+
+                dataTable.Rows.Add(
+                    count,
+                    book.TenSach,
+                    importBillDetail.SoLuong,
+                    string.Format("{0:N0} VNĐ", importBillDetail.DonGia),
+                    string.Format("{0:N0} VNĐ", importBillDetail.ThanhTien)
+                );
+
+                amount += importBillDetail.SoLuong;
+                count++;
+            }
+
+            this.bindingSource1.DataSource = dataTable;
+
+            // Thêm tham số cho báo cáo
+            Microsoft.Reporting.WinForms.ReportParameter[] p = new Microsoft.Reporting.WinForms.ReportParameter[]
+            {
+                new Microsoft.Reporting.WinForms.ReportParameter("pInvoiceCode", importBill.MaDonNhapHang.ToString()),
+                new Microsoft.Reporting.WinForms.ReportParameter("pEmployee", staff.Ten.ToString()),
+                new Microsoft.Reporting.WinForms.ReportParameter("pDate", importBill.NgayLap.ToString("dd/MM/yyyy")),
+                new Microsoft.Reporting.WinForms.ReportParameter("pSupplier", supplier.TenNhaCungCap),
+                new Microsoft.Reporting.WinForms.ReportParameter("pTotalPrice", string.Format("{0:N0} VNĐ", importBill.TongTien)),
+                new Microsoft.Reporting.WinForms.ReportParameter("pBenefitPercent", string.Format("{0:N0} VNĐ",importBill.PhanTramLoiNhuan + "%")),
+                new Microsoft.Reporting.WinForms.ReportParameter("pTotalAmount", amount.ToString())
+            };
+
+            // Cấu hình nguồn dữ liệu cho báo cáo
+            ReportDataSource reportDataSource = new ReportDataSource("BookDataList", dataTable);
+            reportViewer1.LocalReport.DataSources.Clear();
+            reportViewer1.LocalReport.DataSources.Add(reportDataSource);
+            this.reportViewer1.LocalReport.SetParameters(p);
+
+            // Thêm phân trang nếu cần
             this.reportViewer1.RefreshReport();
         }
     }
